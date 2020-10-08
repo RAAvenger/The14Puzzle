@@ -1,4 +1,4 @@
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class BehaviorTree {
@@ -12,8 +12,8 @@ public class BehaviorTree {
      * @param rootState Array of short variables( "0" => "empty place" ). ex: [1,2,3,4,5,6,0,7,8,9,0,10,11,12,13,14].
      */
     public BehaviorTree(short[] rootState) {
-        frontier = new PriorityQueue<BehaviorNode>();
-        explored = new PriorityQueue<BehaviorNode>();
+        frontier = new LinkedList<BehaviorNode>();
+        explored = new LinkedList<BehaviorNode>();
         root = new BehaviorNode(null, rootState);
         frontier.offer(root);
     }
@@ -36,7 +36,6 @@ public class BehaviorTree {
         if (!frontier.contains(parent) && !explored.contains(parent)) {
             throw new Throwable("Parent doesn't exists in tree");
         }
-
         BehaviorNode newNode = new BehaviorNode(parent, state);
         if (!frontier.contains(newNode) && !explored.contains(newNode)) {
             frontier.add(newNode);

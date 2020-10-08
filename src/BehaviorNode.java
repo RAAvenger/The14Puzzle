@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-public class BehaviorNode implements Comparable {
+public class BehaviorNode {
     public short[] state;
     public int pathCost;
     public BehaviorNode parent;
@@ -99,16 +99,16 @@ public class BehaviorNode implements Comparable {
         return BehaviorNode.Compare(this, (BehaviorNode) object);
     }
 
-    @Override
-    public int compareTo(Object o) {
-        if (this.equals(o))
-            return 0;
-        BehaviorNode ob = (BehaviorNode) o;
-        if (this.pathCost > ob.pathCost)
-            return 1;
-        else if (this.pathCost < ob.pathCost)
-            return -1;
-        else
-            return 2;
-    }
+//    @Override
+//    public int compareTo(Object o) {
+//        if (this.equals(o))
+//            return 0;
+//        BehaviorNode ob = (BehaviorNode) o;
+//        if (this.pathCost > ob.pathCost)
+//            return 1;
+//        else if (this.pathCost < ob.pathCost)
+//            return -1;
+//        else
+//            return 2;
+//    }
 }

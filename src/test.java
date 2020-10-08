@@ -54,12 +54,12 @@ class test {
         BehaviorTree tree = new BehaviorTree(root);
         BehaviorNode frontNode = null;
         boolean temp;
-        for (int c = 0; c < 5; c++) {
+        for (int c = 0; c < 12; c++) {
             frontNode = tree.GetHeadOfFrontier();
             for (int d = 0; d < 8; d++) {
                 lastState = newState();
                 temp = tree.NewNode(frontNode, lastState);
-                System.out.println("Add" + (c * 8 + d) + ":" + temp);
+                System.out.println("Add:" + temp);
             }
             tree.AddNodeToExplored(frontNode);
             frontNode = tree.GetHeadOfFrontier();
