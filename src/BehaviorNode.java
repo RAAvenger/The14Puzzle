@@ -1,15 +1,21 @@
 import java.util.Stack;
 
-public class BehaviorNode {
+public class BehaviorNode implements Comparable {
     public short[] state;
     public int pathCost;
     public BehaviorNode parent;
     private int rowLength;
 
-    public BehaviorNode(short[] state, int parentPathCost, BehaviorNode parent) {
+    /**
+     * Node constructor.
+     *
+     * @param state  new state
+     * @param parent parent node
+     */
+    public BehaviorNode(BehaviorNode parent, short[] state) {
         this.state = state;
-        this.pathCost = parentPathCost + 1;
         this.parent = parent;
+        this.pathCost = (parent != null) ? parent.pathCost + 1 : 0;
     }
 
     /**
@@ -19,16 +25,7 @@ public class BehaviorNode {
      * @return state table as string.
      */
     public String Print(int rowLength) {
-        String result = "";
-        for (int i = 0; i < this.state.length; i++) {
-            result += this.state[i] >= 10 ? this.state[i] : "0" + this.state[i];
-            if (i % rowLength == rowLength - 1) {
-                result += "\n";
-            } else {
-                result += ",";
-            }
-        }
-        return result;
+        return getString(rowLength);
     }
 
     /**
@@ -38,9 +35,13 @@ public class BehaviorNode {
      */
     public String Print() {
         int rowLength = (int) Math.round(Math.sqrt(this.state.length));
+        return getString(rowLength);
+    }
+
+    private String getString(int rowLength) {
         String result = "";
         for (int i = 0; i < this.state.length; i++) {
-            result += this.state[i] >= 10 ? this.state[i] : "0" + this.state[i];
+            result += (this.state[i] >= 10) ? this.state[i] : "0" + this.state[i];
             if (i % rowLength == rowLength - 1) {
                 result += "\n";
             } else {
@@ -80,5 +81,34 @@ public class BehaviorNode {
         return true;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        /**
+         * the object is exactly this node.
+         */
+        if (object == this)
+            return true;
+        /**
+         * the object isn't a node.
+         */
+        if (!(object instanceof BehaviorNode))
+            return false;
+        /**
+         * compare object and this class.
+         */
+        return BehaviorNode.Compare(this, (BehaviorNode) object);
+    }
 
+    @Override
+    public int compareTo(Object o) {
+        if (this.equals(o))
+            return 0;
+        BehaviorNode ob = (BehaviorNode) o;
+        if (this.pathCost > ob.pathCost)
+            return 1;
+        else if (this.pathCost < ob.pathCost)
+            return -1;
+        else
+            return 2;
+    }
 }
