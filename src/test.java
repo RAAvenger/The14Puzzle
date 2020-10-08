@@ -14,13 +14,13 @@ class test {
     }
 
     public void TestNodeClass() {
-        short[] nodeState1 = new short[16];
+        int[] nodeState1 = new int[16];
         for (int i = 0; i < 16; i++) {
-            nodeState1[i] = (short) new Random().nextInt(16);
+            nodeState1[i] = (int) new Random().nextInt(16);
         }
-        short[] nodeState2 = new short[16];
+        int[] nodeState2 = new int[16];
         for (int i = 0; i < 16; i++) {
-            nodeState2[i] = (short) new Random().nextInt(16);
+            nodeState2[i] = (int) new Random().nextInt(16);
         }
         BehaviorNode node1 = new BehaviorNode(null, nodeState1);
         BehaviorNode node2 = new BehaviorNode(null, nodeState2);
@@ -50,16 +50,14 @@ class test {
         /**
          * basic test.
          */
-        short[] root = newState(), lastState = null;
+        int[] root = newState(), lastState = null;
         BehaviorTree tree = new BehaviorTree(root);
         BehaviorNode frontNode = null;
-        boolean temp;
         for (int c = 0; c < 12; c++) {
             frontNode = tree.GetHeadOfFrontier();
             for (int d = 0; d < 8; d++) {
                 lastState = newState();
-                temp = tree.NewNode(frontNode, lastState);
-                System.out.println("Add:" + temp);
+                System.out.println("Add:" + tree.NewNode(frontNode, lastState));
             }
             tree.AddNodeToExplored(frontNode);
             frontNode = tree.GetHeadOfFrontier();
@@ -67,17 +65,15 @@ class test {
         /**
          *  check if we can add duplicate states.
          */
-        temp = tree.NewNode(frontNode, root);
-        System.out.println("Add root:" + temp);
-        temp = tree.NewNode(frontNode, lastState);
-        System.out.println("Add last:" + temp);
+        System.out.println("Add root:" + tree.NewNode(frontNode, root));
+        System.out.println("Add last:" + tree.NewNode(frontNode, lastState));
         System.in.read();
     }
 
-    public short[] newState() {
-        short[] state = new short[16];
+    public int[] newState() {
+        int[] state = new int[16];
         for (int i = 0; i < 16; i++) {
-            state[i] = (short) new Random().nextInt(16);
+            state[i] = (int) new Random().nextInt(16);
         }
         return state;
     }

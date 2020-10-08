@@ -1,10 +1,9 @@
 import java.util.Stack;
 
 public class BehaviorNode {
-    public short[] state;
+    public int[] state;
     public int pathCost;
     public BehaviorNode parent;
-    private int rowLength;
 
     /**
      * Node constructor.
@@ -12,7 +11,7 @@ public class BehaviorNode {
      * @param state  new state
      * @param parent parent node
      */
-    public BehaviorNode(BehaviorNode parent, short[] state) {
+    public BehaviorNode(BehaviorNode parent, int[] state) {
         this.state = state;
         this.parent = parent;
         this.pathCost = (parent != null) ? parent.pathCost + 1 : 0;
@@ -99,6 +98,31 @@ public class BehaviorNode {
         return BehaviorNode.Compare(this, (BehaviorNode) object);
     }
 
+    /**
+     * find first blank's( 0 ) index in state array.
+     *
+     * @return if blank exists => 0_15, if blank don't exists => -1.
+     */
+    public int FindFirstBlank() {
+        for (int i = 0; i < state.length; i++) {
+            if (state[i] == 0)
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * find second blank's( 0 ) index in state array.
+     *
+     * @return if blank exists => 0_15, if blank don't exists => -1.
+     */
+    public int FindSecondBlank() {
+        for (int i = state.length - 1; i >= 0; i--) {
+            if (state[i] == 0)
+                return i;
+        }
+        return -1;
+    }
 //    @Override
 //    public int compareTo(Object o) {
 //        if (this.equals(o))

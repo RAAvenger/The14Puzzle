@@ -9,9 +9,9 @@ public class BehaviorTree {
     /**
      * tree constructor.
      *
-     * @param rootState Array of short variables( "0" => "empty place" ). ex: [1,2,3,4,5,6,0,7,8,9,0,10,11,12,13,14].
+     * @param rootState Array of int variables( "0" => "empty place" ). ex: [1,2,3,4,5,6,0,7,8,9,0,10,11,12,13,14].
      */
-    public BehaviorTree(short[] rootState) {
+    public BehaviorTree(int[] rootState) {
         frontier = new LinkedList<BehaviorNode>();
         explored = new LinkedList<BehaviorNode>();
         root = new BehaviorNode(null, rootState);
@@ -26,7 +26,7 @@ public class BehaviorTree {
      * @return "true" if node added successfully and "false" if state already exists in frontier or explored.
      * @throws Throwable
      */
-    public boolean NewNode(BehaviorNode parent, short[] state) throws Throwable {
+    public BehaviorNode NewNode(BehaviorNode parent, int[] state) throws Throwable {
         /**
          * check for invalid inputs.
          */
@@ -39,9 +39,9 @@ public class BehaviorTree {
         BehaviorNode newNode = new BehaviorNode(parent, state);
         if (!frontier.contains(newNode) && !explored.contains(newNode)) {
             frontier.add(newNode);
-            return true;
+            return newNode;
         } else {
-            return false;
+            return null;
         }
     }
 
