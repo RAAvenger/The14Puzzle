@@ -14,7 +14,7 @@ public class BehaviorTree {
     public BehaviorTree(int[] rootState) {
         frontier = new LinkedList<BehaviorNode>();
         explored = new LinkedList<BehaviorNode>();
-        root = new BehaviorNode(null, rootState);
+        root = new BehaviorNode(null, rootState.clone());
         frontier.offer(root);
     }
 
@@ -36,7 +36,7 @@ public class BehaviorTree {
         if (!frontier.contains(parent) && !explored.contains(parent)) {
             throw new Throwable("Parent doesn't exists in tree");
         }
-        BehaviorNode newNode = new BehaviorNode(parent, state);
+        BehaviorNode newNode = new BehaviorNode(parent, state.clone());
         if (!frontier.contains(newNode) && !explored.contains(newNode)) {
             frontier.add(newNode);
             return newNode;

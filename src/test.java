@@ -4,14 +4,13 @@ import java.util.Queue;
 import java.util.Random;
 
 class test {
-
-    public static void main(String[] args) throws Throwable {
-        test This = new test();
-        System.out.println(new Date().getTime());
+//    public static void main(String[] args) throws Throwable {
+//        test This = new test();
+//        System.out.println(new Date().getTime());
 //        This.TestNodeClass();
-        This.TestTreeClass();
-        System.out.println(new Date().getTime());
-    }
+//        This.TestTreeClass();
+//        System.out.println(new Date().getTime());
+//    }
 
     public void TestNodeClass() {
         int[] nodeState1 = new int[16];
