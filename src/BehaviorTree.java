@@ -67,4 +67,32 @@ public class BehaviorTree {
         } else
             return false;
     }
+
+    /**
+     * search frontier for given node.
+     *
+     * @param node a Behavior Node.
+     * @return if node exists in frontier return other node otherwise return null.
+     */
+    public BehaviorNode SearchFrontier(BehaviorNode node) {
+        for (BehaviorNode item : frontier) {
+            if (BehaviorNode.Compare(item, node))
+                return item;
+        }
+        return null;
+    }
+
+    /**
+     * search explored for given node.
+     *
+     * @param node a Behavior Node.
+     * @return if node exists in explored return other node otherwise return null.
+     */
+    public BehaviorNode SearchExplored(BehaviorNode node) {
+        for (BehaviorNode item : explored) {
+            if (BehaviorNode.Compare(item, node))
+                return item;
+        }
+        return null;
+    }
 }
