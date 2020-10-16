@@ -1,23 +1,24 @@
 import java.util.Date;
 import java.util.LinkedList;
 
+
 class The_14_Puzzle {
     private BehaviorTree behaviorTree;
 
     private int[] goalState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0};
-//    private int[] goalState = {0, 2, 3, 0, 1, 5, 10, 4, 9, 6, 8, 7, 13, 14, 11, 12};
-//    private int[] goalState = {7, 2, 12, 9, 5, 3, 1, 4, 8, 0, 11, 14, 0, 6, 13, 10};
 
     private BehaviorNode goal;
     private int rowLength;
 
     public static void main(String[] args) throws Throwable {
         The_14_Puzzle This = new The_14_Puzzle();
-
-//        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
-        This.StartGame(new int[]{1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14});
-//        This.StartGame(new int[]{1, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
+//hard
 //        This.StartGame(new int[]{7, 2, 12, 9, 5, 3, 1, 4, 8, 0, 11, 14, 0, 6, 13, 10});
+//        This.StartGame(new int[]{1, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
+//medium
+        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
+//easy
+//        This.StartGame(new int[]{1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14});
 //        This.StartGame(new int[]{1, 0, 2, 3, 5, 6, 7, 4, 9, 10, 11, 8, 0, 13, 14, 12});
 //        This.StartGame(new int[]{1, 2, 3, 0, 5, 6, 7, 4, 9, 10, 11, 8, 13, 14, 0, 12});
 //        This.StartGame(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0});
@@ -55,9 +56,8 @@ class The_14_Puzzle {
      * @throws Throwable
      */
     public LinkedList<BehaviorNode> Play() throws Throwable {
-        return Algorithm1();
+        return Algorithm2();
     }
-
 
     /**
      * use bfs and start from startState to find goal.
@@ -91,41 +91,105 @@ class The_14_Puzzle {
         }
     }
 
-//    public Stack<BehaviorNode> Algorithm2() throws Throwable {
-//        /** head */
-//        BehaviorNode headCurrentNode = behaviorTree.GetHeadOfFrontier();
-//        int headFirstBlank, headSecondBlank;
-//        LinkedList<int[]> headPossibleMoves;
-//        BehaviorNode headNewNode;
-//        /** tail */
-//        BehaviorTree tailBehaviorTree = new BehaviorTree(goal.state.clone());
-//        BehaviorNode tailCurrentNode = behaviorTree.GetHeadOfFrontier();
-//        int tailFirstBlank, tailSecondBlank;
-//        LinkedList<int[]> tailPossibleMoves;
-//        BehaviorNode tailNewNode;
-//        while (true) {
-//            /** head */
-//            headFirstBlank = headCurrentNode.FindFirstBlank();
-//            headSecondBlank = headCurrentNode.FindSecondBlank();
-//            headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank);
-//            headPossibleMoves.addAll(FindAllPossibleMoves(headCurrentNode.state.clone(), headSecondBlank));
-//            int headPossibleMovesLength = headPossibleMoves.size();
-//            for (int i = 0; i < headPossibleMovesLength; i++) {
-//                headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
-//            }
-//            /** tail */
-//            tailFirstBlank = tailCurrentNode.FindFirstBlank();
-//            tailSecondBlank = tailCurrentNode.FindSecondBlank();
-//            tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank);
-//            int tailPossibleMovesLength = tailPossibleMoves.size();
-//            for (int i = 0; i < tailPossibleMovesLength; i++) {
-//                tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
-//            }
-//            /** compare new states */
-//
-//        }
-//    }
+    /**
+     * use two bfs tree, in one of them start from startState and in the other one start from goal, if a same state
+     * occurred in both trees we found a path from start state to goal.
+     *
+     * @return path from start to goal.
+     */
 
+    public LinkedList<BehaviorNode> Algorithm2() throws Throwable {
+        /** head */
+        BehaviorNode headCurrentNode = behaviorTree.GetHeadOfFrontier();
+        int headFirstBlank, headSecondBlank;
+        LinkedList<int[]> headPossibleMoves;
+        BehaviorNode headNewNode;
+        boolean headNotEnded = true;
+        /** tail */
+        BehaviorTree tailBehaviorTree = new BehaviorTree(goal.state.clone());
+        BehaviorNode tailCurrentNode = tailBehaviorTree.GetHeadOfFrontier();
+        int tailFirstBlank, tailSecondBlank;
+        LinkedList<int[]> tailPossibleMoves;
+        BehaviorNode tailNewNode;
+        boolean tailNotEnded = true;
+        while (true) {
+            /** head */
+            if (headNotEnded) {
+                headFirstBlank = headCurrentNode.FindFirstBlank();
+                headSecondBlank = headCurrentNode.FindSecondBlank();
+                headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank);
+                headPossibleMoves.addAll(FindAllPossibleMoves(headCurrentNode.state.clone(), headSecondBlank));
+                int headPossibleMovesLength = headPossibleMoves.size();
+                for (int i = 0; i < headPossibleMovesLength; i++) {
+                    headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
+                }
+                for (int i = 0; i < headPossibleMoves.size(); i++) {
+                    BehaviorNode newNode = behaviorTree.NewNode(headCurrentNode, headPossibleMoves.get(i).clone());
+                    if (newNode != null) {
+                        BehaviorNode searchResult = tailBehaviorTree.SearchExplored(newNode);
+                        if (searchResult != null) {
+                            return ConcatenatePaths(newNode, searchResult);
+                        }
+                        searchResult = tailBehaviorTree.SearchFrontier(newNode);
+                        if (searchResult != null) {
+                            return ConcatenatePaths(newNode, searchResult);
+                        }
+                    }
+                }
+                behaviorTree.AddNodeToExplored(headCurrentNode);
+                headCurrentNode = behaviorTree.GetHeadOfFrontier();
+                headPossibleMoves.clear();
+            }
+            /** tail */
+            if (tailNotEnded) {
+                tailFirstBlank = tailCurrentNode.FindFirstBlank();
+                tailSecondBlank = tailCurrentNode.FindSecondBlank();
+                tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank);
+                int tailPossibleMovesLength = tailPossibleMoves.size();
+                for (int i = 0; i < tailPossibleMovesLength; i++) {
+                    tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
+                }
+                for (int i = 0; i < tailPossibleMoves.size(); i++) {
+                    BehaviorNode newNode = tailBehaviorTree.NewNode(tailCurrentNode, tailPossibleMoves.get(i).clone());
+                    if (newNode != null) {
+                        BehaviorNode searchResult = behaviorTree.SearchExplored(newNode);
+                        if (searchResult != null) {
+                            return ConcatenatePaths(searchResult, newNode);
+                        }
+                        searchResult = behaviorTree.SearchFrontier(newNode);
+                        if (searchResult != null) {
+                            return ConcatenatePaths(searchResult, newNode);
+                        }
+                    }
+                }
+                tailBehaviorTree.AddNodeToExplored(tailCurrentNode);
+                tailCurrentNode = tailBehaviorTree.GetHeadOfFrontier();
+                tailPossibleMoves.clear();
+            }
+            if (headCurrentNode == null)
+                headNotEnded = false;
+            if (tailCurrentNode == null)
+                tailNotEnded = false;
+            if (!tailNotEnded && !headNotEnded)
+                return null;
+        }
+    }
+
+    /**
+     * get two nodes and get their paths then Concatenate path of second node to path of first node.
+     *
+     * @param firstNode  first BehaviorNode
+     * @param secondNode second BehaviorNode
+     * @return a path from first state in path of first node to last state in path of second node.
+     */
+    private LinkedList<BehaviorNode> ConcatenatePaths(BehaviorNode firstNode, BehaviorNode secondNode) {
+        LinkedList<BehaviorNode> firstPath = firstNode.PathToNode();
+        LinkedList<BehaviorNode> secondPath = secondNode.PathToNode();
+        for (int i = secondPath.size() - 2; i >= 0; i--) {
+            firstPath.addLast(secondPath.get(i));
+        }
+        return firstPath;
+    }
 
     /**
      * find all possible moves for given blank in given state.
