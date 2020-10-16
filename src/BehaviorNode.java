@@ -1,4 +1,4 @@
-import java.util.Stack;
+import java.util.LinkedList;
 
 public class BehaviorNode {
     public int[] state;
@@ -42,11 +42,11 @@ public class BehaviorNode {
      *
      * @return a stack of nodes.
      */
-    public Stack<BehaviorNode> PathToNode() {
+    public LinkedList<BehaviorNode> PathToNode() {
         BehaviorNode currentNode = this;
-        Stack<BehaviorNode> path = new Stack<BehaviorNode>();
+        LinkedList<BehaviorNode> path = new LinkedList<BehaviorNode>();
         do {
-            path.push(currentNode);
+            path.addFirst(currentNode);
             currentNode = currentNode.parent;
         } while (currentNode != null);
         return path;

@@ -1,6 +1,5 @@
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Stack;
 
 class The_14_Puzzle {
     private BehaviorTree behaviorTree;
@@ -15,8 +14,8 @@ class The_14_Puzzle {
     public static void main(String[] args) throws Throwable {
         The_14_Puzzle This = new The_14_Puzzle();
 
-        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
-//        This.StartGame(new int[]{1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14});
+//        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
+        This.StartGame(new int[]{1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14});
 //        This.StartGame(new int[]{1, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
 //        This.StartGame(new int[]{7, 2, 12, 9, 5, 3, 1, 4, 8, 0, 11, 14, 0, 6, 13, 10});
 //        This.StartGame(new int[]{1, 0, 2, 3, 5, 6, 7, 4, 9, 10, 11, 8, 0, 13, 14, 12});
@@ -24,7 +23,7 @@ class The_14_Puzzle {
 //        This.StartGame(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0});
 //        This.StartGame(new int[]{0, 2, 3, 0, 1, 5, 10, 4, 9, 6, 8, 7, 13, 14, 11, 12});
         long startTime = new Date().getTime();
-        Stack<BehaviorNode> path = This.Play();
+        LinkedList<BehaviorNode> path = This.Play();
         System.out.println((new Date().getTime() - startTime) + "ms");
         if (path == null) {
             System.out.println("No Answer!");
@@ -55,7 +54,7 @@ class The_14_Puzzle {
      * @return path to goal.
      * @throws Throwable
      */
-    public Stack<BehaviorNode> Play() throws Throwable {
+    public LinkedList<BehaviorNode> Play() throws Throwable {
         return Algorithm1();
     }
 
@@ -65,7 +64,7 @@ class The_14_Puzzle {
      *
      * @return path from start to goal.
      */
-    private Stack<BehaviorNode> Algorithm1() throws Throwable {
+    private LinkedList<BehaviorNode> Algorithm1() throws Throwable {
         BehaviorNode currentNode = behaviorTree.GetHeadOfFrontier();
         int firstBlank, secondBlank;
         LinkedList<int[]> possibleMoves;
@@ -92,40 +91,40 @@ class The_14_Puzzle {
         }
     }
 
-    public Stack<BehaviorNode> Algorithm2() throws Throwable {
-        /** head */
-        BehaviorNode headCurrentNode = behaviorTree.GetHeadOfFrontier();
-        int headFirstBlank, headSecondBlank;
-        LinkedList<int[]> headPossibleMoves;
-        BehaviorNode headNewNode;
-        /** tail */
-        BehaviorTree tailBehaviorTree = new BehaviorTree(goal.state.clone());
-        BehaviorNode tailCurrentNode = behaviorTree.GetHeadOfFrontier();
-        int tailFirstBlank, tailSecondBlank;
-        LinkedList<int[]> tailPossibleMoves;
-        BehaviorNode tailNewNode;
-        while (true) {
-            /** head */
-            headFirstBlank = headCurrentNode.FindFirstBlank();
-            headSecondBlank = headCurrentNode.FindSecondBlank();
-            headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank);
-            headPossibleMoves.addAll(FindAllPossibleMoves(headCurrentNode.state.clone(), headSecondBlank));
-            int headPossibleMovesLength = headPossibleMoves.size();
-            for (int i = 0; i < headPossibleMovesLength; i++) {
-                headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
-            }
-            /** tail */
-            tailFirstBlank = tailCurrentNode.FindFirstBlank();
-            tailSecondBlank = tailCurrentNode.FindSecondBlank();
-            tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank);
-            int tailPossibleMovesLength = tailPossibleMoves.size();
-            for (int i = 0; i < tailPossibleMovesLength; i++) {
-                tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
-            }
-            /** compare new states */
-            
-        }
-    }
+//    public Stack<BehaviorNode> Algorithm2() throws Throwable {
+//        /** head */
+//        BehaviorNode headCurrentNode = behaviorTree.GetHeadOfFrontier();
+//        int headFirstBlank, headSecondBlank;
+//        LinkedList<int[]> headPossibleMoves;
+//        BehaviorNode headNewNode;
+//        /** tail */
+//        BehaviorTree tailBehaviorTree = new BehaviorTree(goal.state.clone());
+//        BehaviorNode tailCurrentNode = behaviorTree.GetHeadOfFrontier();
+//        int tailFirstBlank, tailSecondBlank;
+//        LinkedList<int[]> tailPossibleMoves;
+//        BehaviorNode tailNewNode;
+//        while (true) {
+//            /** head */
+//            headFirstBlank = headCurrentNode.FindFirstBlank();
+//            headSecondBlank = headCurrentNode.FindSecondBlank();
+//            headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank);
+//            headPossibleMoves.addAll(FindAllPossibleMoves(headCurrentNode.state.clone(), headSecondBlank));
+//            int headPossibleMovesLength = headPossibleMoves.size();
+//            for (int i = 0; i < headPossibleMovesLength; i++) {
+//                headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
+//            }
+//            /** tail */
+//            tailFirstBlank = tailCurrentNode.FindFirstBlank();
+//            tailSecondBlank = tailCurrentNode.FindSecondBlank();
+//            tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank);
+//            int tailPossibleMovesLength = tailPossibleMoves.size();
+//            for (int i = 0; i < tailPossibleMovesLength; i++) {
+//                tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
+//            }
+//            /** compare new states */
+//
+//        }
+//    }
 
 
     /**
