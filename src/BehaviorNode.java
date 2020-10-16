@@ -80,17 +80,17 @@ public class BehaviorNode {
 
     @Override
     public boolean equals(Object object) {
-        /**
+        /*
          * the object is exactly this node.
          */
         if (object == this)
             return true;
-        /**
+        /*
          * the object isn't a node.
          */
         if (!(object instanceof BehaviorNode))
             return false;
-        /**
+        /*
          * compare object and this class.
          */
         return BehaviorNode.Compare(this, (BehaviorNode) object);
@@ -99,27 +99,27 @@ public class BehaviorNode {
     /**
      * get State as a well formatted string.
      *
-     * @param rowLength
-     * @return
+     * @param rowLength length of each row.
+     * @return state as well shaped string.
      */
     private String getString(int rowLength) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < this.state.length; i++) {
-            result += (this.state[i] >= 10) ? this.state[i] : "0" + this.state[i];
+            result.append((this.state[i] >= 10) ? this.state[i] : "0" + this.state[i]);
             if (i % rowLength == rowLength - 1) {
-                result += "\n";
+                result.append("\n");
             } else {
-                result += ",";
+                result.append(",");
             }
         }
-        return result;
+        return result.toString();
     }
 
     /**
      * get two nodes and compare their states.
      *
-     * @param first
-     * @param second
+     * @param first  first node.
+     * @param second second node.
      * @return "true" if nodes have same states and "false" if they don't have same states.
      */
     public static boolean Compare(BehaviorNode first, BehaviorNode second) {

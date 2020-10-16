@@ -24,10 +24,9 @@ public class BehaviorTree {
      * @param parent parent node
      * @param state  new node state
      * @return "true" if node added successfully and "false" if state already exists in frontier or explored.
-     * @throws Throwable
      */
     public BehaviorNode NewNode(BehaviorNode parent, int[] state) throws Throwable {
-        /**
+        /*
          * check for invalid inputs.
          */
         if (state.length != root.state.length) {
@@ -57,7 +56,7 @@ public class BehaviorTree {
     /**
      * remove node from frontier and add node to explored.
      *
-     * @param node
+     * @param node given node from frontier.
      * @return true if node added successfully.
      */
     public boolean AddNodeToExplored(BehaviorNode node) {
