@@ -174,7 +174,7 @@ class The_14_Puzzle {
     private LinkedList<BehaviorNode> ConcatenatePaths(BehaviorNode firstNode, BehaviorNode secondNode) {
         LinkedList<BehaviorNode> firstPath = firstNode.PathToNode();
         LinkedList<BehaviorNode> secondPath = secondNode.PathToNode();
-        for (int i = secondPath.size() - 1; i >= 0; i--) {
+        for (int i = secondPath.size() - 2; i >= 0; i--) {
             firstPath.addLast(secondPath.get(i));
         }
         return firstPath;
