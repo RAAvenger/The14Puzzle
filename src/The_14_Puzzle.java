@@ -16,13 +16,13 @@ class The_14_Puzzle {
 //        This.StartGame(new int[]{7, 2, 12, 9, 5, 3, 1, 4, 8, 0, 11, 14, 0, 6, 13, 10});
 //        This.StartGame(new int[]{1, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
 //medium
-//        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
+        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
 //easy
 //        This.StartGame(new int[]{1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14});
 //        This.StartGame(new int[]{1, 0, 2, 3, 5, 6, 7, 4, 9, 10, 11, 8, 0, 13, 14, 12});
 //        This.StartGame(new int[]{1, 2, 3, 0, 5, 6, 7, 4, 9, 10, 11, 8, 13, 14, 0, 12});
 //        This.StartGame(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0});
-        This.StartGame(new int[]{0, 2, 3, 0, 1, 5, 10, 4, 9, 6, 8, 7, 13, 14, 11, 12});
+//        This.StartGame(new int[]{0, 2, 3, 0, 1, 5, 10, 4, 9, 6, 8, 7, 13, 14, 11, 12});
         long startTime = new Date().getTime();
         LinkedList<BehaviorNode> path = This.Play();
         System.out.println((new Date().getTime() - startTime) + "ms");
@@ -95,7 +95,6 @@ class The_14_Puzzle {
      *
      * @return path from start to goal.
      */
-
     public LinkedList<BehaviorNode> Algorithm2() throws Throwable {
         /* head variables */
         BehaviorNode headCurrentNode = behaviorTree.GetHeadOfFrontier();
@@ -115,6 +114,7 @@ class The_14_Puzzle {
                 headSecondBlank = headCurrentNode.FindSecondBlank();
                 headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank);
                 int headPossibleMovesLength = headPossibleMoves.size();
+                headPossibleMoves.addAll(FindAllPossibleMoves(headCurrentNode.state.clone(), headSecondBlank));
                 for (int i = 0; i < headPossibleMovesLength; i++) {
                     headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
                 }
@@ -141,6 +141,7 @@ class The_14_Puzzle {
                 tailSecondBlank = tailCurrentNode.FindSecondBlank();
                 tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank);
                 int tailPossibleMovesLength = tailPossibleMoves.size();
+                tailPossibleMoves.addAll(FindAllPossibleMoves(tailCurrentNode.state.clone(), tailSecondBlank));
                 for (int i = 0; i < tailPossibleMovesLength; i++) {
                     tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
                 }
@@ -180,7 +181,7 @@ class The_14_Puzzle {
     private LinkedList<BehaviorNode> ConcatenatePaths(BehaviorNode firstNode, BehaviorNode secondNode) {
         LinkedList<BehaviorNode> firstPath = firstNode.PathToNode();
         LinkedList<BehaviorNode> secondPath = secondNode.PathToNode();
-        for (int i = secondPath.size() - 1; i >= 0; i--) {
+        for (int i = secondPath.size() - 2; i >= 0; i--) {
             firstPath.addLast(secondPath.get(i));
         }
         return firstPath;
