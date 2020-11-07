@@ -1,4 +1,3 @@
-import java.util.Date;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
@@ -50,7 +49,7 @@ class test {
          * basic test.
          */
         int[] root = newState(), lastState = null;
-        BehaviorTree tree = new BehaviorTree(root);
+        BehaviorTreeForBFSAlgorithm tree = new BehaviorTreeForBFSAlgorithm(root);
         BehaviorNode frontNode = null;
         for (int c = 0; c < 12; c++) {
             frontNode = tree.GetHeadOfFrontier();

@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BehaviorTree {
+public class BehaviorTreeForBFSAlgorithm {
     private BehaviorNode root;
     private Queue<BehaviorNode> frontier;
     private Queue<BehaviorNode> explored;
@@ -11,7 +11,7 @@ public class BehaviorTree {
      *
      * @param rootState Array of int variables( "0" => "empty place" ). ex: [1,2,3,4,5,6,0,7,8,9,0,10,11,12,13,14].
      */
-    public BehaviorTree(int[] rootState) {
+    public BehaviorTreeForBFSAlgorithm(int[] rootState) {
         frontier = new LinkedList<BehaviorNode>();
         explored = new LinkedList<BehaviorNode>();
         root = new BehaviorNode(null, rootState.clone());

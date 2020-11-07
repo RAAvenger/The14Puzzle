@@ -3,7 +3,7 @@ import java.util.LinkedList;
 
 
 class The_14_Puzzle {
-    private BehaviorTree behaviorTree;
+    private BehaviorTreeForBFSAlgorithm behaviorTreeForBFSAlgorithm;
 
     private int[] goalState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0};
 
@@ -42,7 +42,7 @@ class The_14_Puzzle {
      * @param startState start state of the game.
      */
     public void StartGame(int[] startState) {
-        behaviorTree = new BehaviorTree(startState.clone());
+        behaviorTreeForBFSAlgorithm = new BehaviorTreeForBFSAlgorithm(startState.clone());
         goal = new BehaviorNode(null, goalState.clone());
         rowLength = (int) Math.sqrt(startState.length);
     }
@@ -63,7 +63,7 @@ class The_14_Puzzle {
      * @return path from start to goal.
      */
     private LinkedList<BehaviorNode> Algorithm1() throws Throwable {
-        BehaviorNode currentNode = behaviorTree.GetHeadOfFrontier();
+        BehaviorNode currentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
         int firstBlank, secondBlank;
         LinkedList<int[]> possibleMoves;
         BehaviorNode newNode;
@@ -77,12 +77,12 @@ class The_14_Puzzle {
                 possibleMoves.addAll(FindAllPossibleMoves(possibleMoves.get(i).clone(), secondBlank));
             }
             for (int[] move : possibleMoves) {
-                newNode = behaviorTree.NewNode(currentNode, move.clone());
+                newNode = behaviorTreeForBFSAlgorithm.NewNode(currentNode, move.clone());
                 if (newNode != null && BehaviorNode.Compare(newNode, goal))
                     return newNode.PathToNode();
             }
-            behaviorTree.AddNodeToExplored(currentNode);
-            currentNode = behaviorTree.GetHeadOfFrontier();
+            behaviorTreeForBFSAlgorithm.AddNodeToExplored(currentNode);
+            currentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
             possibleMoves.clear();
             if (currentNode == null)
                 return null;
@@ -97,13 +97,13 @@ class The_14_Puzzle {
      */
     public LinkedList<BehaviorNode> Algorithm2() throws Throwable {
         /* head variables */
-        BehaviorNode headCurrentNode = behaviorTree.GetHeadOfFrontier();
+        BehaviorNode headCurrentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
         int headFirstBlank, headSecondBlank;
         LinkedList<int[]> headPossibleMoves;
         boolean headNotEnded = true;
         /* tail variables */
-        BehaviorTree tailBehaviorTree = new BehaviorTree(goal.state.clone());
-        BehaviorNode tailCurrentNode = tailBehaviorTree.GetHeadOfFrontier();
+        BehaviorTreeForBFSAlgorithm tailBehaviorTreeForBFSAlgorithm = new BehaviorTreeForBFSAlgorithm(goal.state.clone());
+        BehaviorNode tailCurrentNode = tailBehaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
         int tailFirstBlank, tailSecondBlank;
         LinkedList<int[]> tailPossibleMoves;
         boolean tailNotEnded = true;
@@ -119,20 +119,20 @@ class The_14_Puzzle {
                     headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
                 }
                 for (int i = 0; i < headPossibleMoves.size(); i++) {
-                    BehaviorNode newNode = behaviorTree.NewNode(headCurrentNode, headPossibleMoves.get(i).clone());
+                    BehaviorNode newNode = behaviorTreeForBFSAlgorithm.NewNode(headCurrentNode, headPossibleMoves.get(i).clone());
                     if (newNode != null) {
-                        BehaviorNode searchResult = tailBehaviorTree.SearchExplored(newNode);
+                        BehaviorNode searchResult = tailBehaviorTreeForBFSAlgorithm.SearchExplored(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(newNode, searchResult);
                         }
-                        searchResult = tailBehaviorTree.SearchFrontier(newNode);
+                        searchResult = tailBehaviorTreeForBFSAlgorithm.SearchFrontier(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(newNode, searchResult);
                         }
                     }
                 }
-                behaviorTree.AddNodeToExplored(headCurrentNode);
-                headCurrentNode = behaviorTree.GetHeadOfFrontier();
+                behaviorTreeForBFSAlgorithm.AddNodeToExplored(headCurrentNode);
+                headCurrentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
                 headPossibleMoves.clear();
             }
             /* tail process */
@@ -146,20 +146,20 @@ class The_14_Puzzle {
                     tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
                 }
                 for (int i = 0; i < tailPossibleMoves.size(); i++) {
-                    BehaviorNode newNode = tailBehaviorTree.NewNode(tailCurrentNode, tailPossibleMoves.get(i).clone());
+                    BehaviorNode newNode = tailBehaviorTreeForBFSAlgorithm.NewNode(tailCurrentNode, tailPossibleMoves.get(i).clone());
                     if (newNode != null) {
-                        BehaviorNode searchResult = behaviorTree.SearchExplored(newNode);
+                        BehaviorNode searchResult = behaviorTreeForBFSAlgorithm.SearchExplored(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(searchResult, newNode);
                         }
-                        searchResult = behaviorTree.SearchFrontier(newNode);
+                        searchResult = behaviorTreeForBFSAlgorithm.SearchFrontier(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(searchResult, newNode);
                         }
                     }
                 }
-                tailBehaviorTree.AddNodeToExplored(tailCurrentNode);
-                tailCurrentNode = tailBehaviorTree.GetHeadOfFrontier();
+                tailBehaviorTreeForBFSAlgorithm.AddNodeToExplored(tailCurrentNode);
+                tailCurrentNode = tailBehaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
                 tailPossibleMoves.clear();
             }
             if (headCurrentNode == null)

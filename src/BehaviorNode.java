@@ -2,7 +2,8 @@ import java.util.LinkedList;
 
 public class BehaviorNode {
     public int[] state;
-    public int pathCost;
+    public int costFromStart;
+    public int costToEnd;
     public BehaviorNode parent;
 
     /**
@@ -14,7 +15,7 @@ public class BehaviorNode {
     public BehaviorNode(BehaviorNode parent, int[] state) {
         this.state = state;
         this.parent = parent;
-        this.pathCost = (parent != null) ? parent.pathCost + 1 : 0;
+        this.costFromStart = (parent != null) ? parent.costFromStart + 1 : 0;
     }
 
     /**
@@ -76,6 +77,22 @@ public class BehaviorNode {
                 return i;
         }
         return -1;
+    }
+
+    /**
+     * get goal state and calculate hamming distance from this state to goal.
+     *
+     * @param finallState the goal.
+     * @return hamming distance.
+     */
+    public int CalculateCostToEndUsingHammingDistance(int[] finallState) {
+        int cost = 0;
+        for (int i = 0; i < this.state.length; i++) {
+            if (state != finallState)
+                cost++;
+        }
+        this.costToEnd = cost;
+        return cost;
     }
 
     @Override
