@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class BehaviorNode {
+public class BehaviorNode implements Comparable {
     public int[] state;
     public int costFromStart;
     public int costToEnd;
@@ -80,19 +80,32 @@ public class BehaviorNode {
     }
 
     /**
-     * get goal state and calculate hamming distance from this state to goal.
+     * get two nodes and compare their states.
+     *
+     * @param first  first node.
+     * @param second second node.
+     * @return "true" if nodes have same states and "false" if they don't have same states.
+     */
+    public static boolean Compare(BehaviorNode first, BehaviorNode second) {
+        for (int i = 0; i < first.state.length; i++) {
+            if (first.state[i] != second.state[i])
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * get goal state and calculate hamming distance from this state to goal than store value in costToEnd.
      *
      * @param finallState the goal.
-     * @return hamming distance.
      */
-    public int CalculateCostToEndUsingHammingDistance(int[] finallState) {
+    public void CalculateCostToEndUsingHammingDistance(int[] finallState) {
         int cost = 0;
         for (int i = 0; i < this.state.length; i++) {
-            if (state != finallState)
+            if (state[i] != finallState[i])
                 cost++;
         }
         this.costToEnd = cost;
-        return cost;
     }
 
     @Override
@@ -111,6 +124,17 @@ public class BehaviorNode {
          * compare object and this class.
          */
         return BehaviorNode.Compare(this, (BehaviorNode) object);
+    }
+
+    @Override
+    public int compareTo(Object object) {
+        BehaviorNode secondNode = (BehaviorNode) object;
+        int costFromStartCompare = costFromStart - secondNode.costFromStart;
+        int costToEndCompare = costToEnd - secondNode.costToEnd;
+        if (costFromStartCompare != 0)
+            return costFromStartCompare;
+        else
+            return costToEndCompare;
     }
 
     /**
@@ -132,18 +156,5 @@ public class BehaviorNode {
         return result.toString();
     }
 
-    /**
-     * get two nodes and compare their states.
-     *
-     * @param first  first node.
-     * @param second second node.
-     * @return "true" if nodes have same states and "false" if they don't have same states.
-     */
-    public static boolean Compare(BehaviorNode first, BehaviorNode second) {
-        for (int i = 0; i < first.state.length; i++) {
-            if (first.state[i] != second.state[i])
-                return false;
-        }
-        return true;
-    }
+
 }
