@@ -20,15 +20,15 @@ class test {
         for (int i = 0; i < 16; i++) {
             nodeState2[i] = (int) new Random().nextInt(16);
         }
-        BehaviorNode node1 = new BehaviorNode(null, nodeState1);
-        BehaviorNode node2 = new BehaviorNode(null, nodeState2);
-        BehaviorNode node3 = new BehaviorNode(null, nodeState1);
+        BehaviorNode node1 = new BehaviorNode(null, nodeState1,0);
+        BehaviorNode node2 = new BehaviorNode(null, nodeState2,0);
+        BehaviorNode node3 = new BehaviorNode(null, nodeState1,0);
         System.out.println(node1.Print());
         System.out.println(node2.Print());
         boolean temp;
-        temp = BehaviorNode.Compare(node1, node2);
+        temp = BehaviorNode.CompareStates(node1, node2);
         System.out.println("result1=" + temp);
-        temp = BehaviorNode.Compare(node1, node3);
+        temp = BehaviorNode.CompareStates(node1, node3);
         System.out.println("result2=" + temp);
         /**
          * check contains function of collections.

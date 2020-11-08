@@ -12,10 +12,10 @@ public class BehaviorNode implements Comparable {
      * @param state  new state
      * @param parent parent node
      */
-    public BehaviorNode(BehaviorNode parent, int[] state) {
+    public BehaviorNode(BehaviorNode parent, int[] state, int cost) {
         this.state = state;
         this.parent = parent;
-        this.costFromStart = (parent != null) ? parent.costFromStart + 1 : 0;
+        this.costFromStart = (parent != null) ? parent.costFromStart + cost : 0;
     }
 
     /**
@@ -25,7 +25,7 @@ public class BehaviorNode implements Comparable {
      * @return state table as string.
      */
     public String Print(int rowLength) {
-        return getString(rowLength);
+        return GetString(rowLength);
     }
 
     /**
@@ -35,7 +35,7 @@ public class BehaviorNode implements Comparable {
      */
     public String Print() {
         int rowLength = (int) Math.round(Math.sqrt(this.state.length));
-        return getString(rowLength);
+        return GetString(rowLength);
     }
 
     /**
@@ -86,7 +86,7 @@ public class BehaviorNode implements Comparable {
      * @param second second node.
      * @return "true" if nodes have same states and "false" if they don't have same states.
      */
-    public static boolean Compare(BehaviorNode first, BehaviorNode second) {
+    public static boolean CompareStates(BehaviorNode first, BehaviorNode second) {
         for (int i = 0; i < first.state.length; i++) {
             if (first.state[i] != second.state[i])
                 return false;
@@ -97,12 +97,12 @@ public class BehaviorNode implements Comparable {
     /**
      * get goal state and calculate hamming distance from this state to goal than store value in costToEnd.
      *
-     * @param finallState the goal.
+     * @param finalState the goal.
      */
-    public void CalculateCostToEndUsingHammingDistance(int[] finallState) {
+    public void CalculateHammingDistance(int[] finalState) {
         int cost = 0;
         for (int i = 0; i < this.state.length; i++) {
-            if (state[i] != finallState[i])
+            if (state[i] != finalState[i])
                 cost++;
         }
         this.costToEnd = cost;
@@ -123,7 +123,7 @@ public class BehaviorNode implements Comparable {
         /*
          * compare object and this class.
          */
-        return BehaviorNode.Compare(this, (BehaviorNode) object);
+        return BehaviorNode.CompareStates(this, (BehaviorNode) object);
     }
 
     @Override
@@ -131,10 +131,7 @@ public class BehaviorNode implements Comparable {
         BehaviorNode secondNode = (BehaviorNode) object;
         int costFromStartCompare = costFromStart - secondNode.costFromStart;
         int costToEndCompare = costToEnd - secondNode.costToEnd;
-        if (costFromStartCompare != 0)
-            return costFromStartCompare;
-        else
-            return costToEndCompare;
+        return costToEndCompare + costFromStartCompare;
     }
 
     /**
@@ -143,7 +140,7 @@ public class BehaviorNode implements Comparable {
      * @param rowLength length of each row.
      * @return state as well shaped string.
      */
-    private String getString(int rowLength) {
+    private String GetString(int rowLength) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < this.state.length; i++) {
             result.append((this.state[i] >= 10) ? this.state[i] : "0" + this.state[i]);
@@ -155,6 +152,4 @@ public class BehaviorNode implements Comparable {
         }
         return result.toString();
     }
-
-
 }

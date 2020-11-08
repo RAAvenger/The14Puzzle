@@ -14,7 +14,7 @@ public class BehaviorTreeForBFSAlgorithm {
     public BehaviorTreeForBFSAlgorithm(int[] rootState) {
         frontier = new LinkedList<BehaviorNode>();
         explored = new LinkedList<BehaviorNode>();
-        root = new BehaviorNode(null, rootState.clone());
+        root = new BehaviorNode(null, rootState.clone(),0);
         frontier.offer(root);
     }
 
@@ -35,7 +35,7 @@ public class BehaviorTreeForBFSAlgorithm {
         if (!frontier.contains(parent) && !explored.contains(parent)) {
             throw new Throwable("Parent doesn't exists in tree");
         }
-        BehaviorNode newNode = new BehaviorNode(parent, state.clone());
+        BehaviorNode newNode = new BehaviorNode(parent, state.clone(),0);
         if (!frontier.contains(newNode) && !explored.contains(newNode)) {
             frontier.add(newNode);
             return newNode;
@@ -75,7 +75,7 @@ public class BehaviorTreeForBFSAlgorithm {
      */
     public BehaviorNode SearchFrontier(BehaviorNode node) {
         for (BehaviorNode item : frontier) {
-            if (BehaviorNode.Compare(item, node))
+            if (BehaviorNode.CompareStates(item, node))
                 return item;
         }
         return null;
@@ -89,7 +89,7 @@ public class BehaviorTreeForBFSAlgorithm {
      */
     public BehaviorNode SearchExplored(BehaviorNode node) {
         for (BehaviorNode item : explored) {
-            if (BehaviorNode.Compare(item, node))
+            if (BehaviorNode.CompareStates(item, node))
                 return item;
         }
         return null;

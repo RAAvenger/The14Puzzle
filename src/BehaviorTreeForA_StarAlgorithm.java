@@ -1,9 +1,11 @@
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class BehaviorTreeForA_StarAlgorithm {
     private BehaviorNode root;
     private Queue<BehaviorNode> frontier;
+    private LinkedList<BehaviorNode> dump;
     int[] goal;
 
     /**
@@ -14,9 +16,10 @@ public class BehaviorTreeForA_StarAlgorithm {
      */
     public BehaviorTreeForA_StarAlgorithm(int[] rootState, int[] goalState) {
         frontier = new PriorityQueue<BehaviorNode>();
-        root = new BehaviorNode(null, rootState);
+        dump = new LinkedList<>();
+        root = new BehaviorNode(null, rootState, 0);
         goal = goalState;
-        root.CalculateCostToEndUsingHammingDistance(goal);
+        root.CalculateHammingDistance(goal);
         frontier.add(root);
     }
 
@@ -25,19 +28,15 @@ public class BehaviorTreeForA_StarAlgorithm {
      *
      * @param parent parent node
      * @param state  new node state
-     * @return "true" if node added successfully and "false" if state already exists in frontier or explored.
      */
-    public BehaviorNode NewNode(BehaviorNode parent, int[] state) throws Throwable {
-        /*
-         * check for invalid inputs.
-         */
+    public void NewNode(BehaviorNode parent, int[] state, int moveCost) throws Throwable {
+        /** check for invalid inputs. */
         if (state.length != root.state.length) {
             throw new Throwable("Wrong state size");
         }
-        BehaviorNode newNode = new BehaviorNode(parent, state.clone());
-        newNode.CalculateCostToEndUsingHammingDistance(goal);
+        BehaviorNode newNode = new BehaviorNode(parent, state.clone(), moveCost);
+        newNode.CalculateHammingDistance(goal);
         frontier.add(newNode);
-        return newNode;
     }
 
     /**
@@ -46,7 +45,10 @@ public class BehaviorTreeForA_StarAlgorithm {
      * @return node object
      */
     public BehaviorNode GetHeadOfFrontier() {
-        return frontier.poll();
+        BehaviorNode node = frontier.poll();
+        dump.add(node);
+        return node;
+
     }
 
 }
