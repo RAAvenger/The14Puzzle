@@ -1,30 +1,26 @@
 import java.util.Date;
 import java.util.LinkedList;
 
-
 class The_14_Puzzle {
-    private BehaviorTreeForBFSAlgorithm behaviorTreeForBFSAlgorithm;
-
-    private int[] goalState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0};
-
-    private BehaviorNode goal;
     private int rowLength;
 
     public static void main(String[] args) throws Throwable {
         The_14_Puzzle This = new The_14_Puzzle();
+        int[] goalState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0};
+//        int[] startState={1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0};
 //hard
-//        This.StartGame(new int[]{7, 2, 12, 9, 5, 3, 1, 4, 8, 0, 11, 14, 0, 6, 13, 10});
-//        This.StartGame(new int[]{1, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
+//        int[] startState={7, 2, 12, 9, 5, 3, 1, 4, 8, 0, 11, 14, 0, 6, 13, 10};
+//        int[] startState={1, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 //medium
-        This.StartGame(new int[]{5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11});
+        int[] startState = {5, 1, 4, 3, 2, 0, 10, 7, 9, 6, 0, 8, 13, 14, 12, 11};
 //easy
-//        This.StartGame(new int[]{1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14});
-//        This.StartGame(new int[]{1, 0, 2, 3, 5, 6, 7, 4, 9, 10, 11, 8, 0, 13, 14, 12});
-//        This.StartGame(new int[]{1, 2, 3, 0, 5, 6, 7, 4, 9, 10, 11, 8, 13, 14, 0, 12});
-//        This.StartGame(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 0});
-//        This.StartGame(new int[]{0, 2, 3, 0, 1, 5, 10, 4, 9, 6, 8, 7, 13, 14, 11, 12});
+//        int[] startState={1, 2, 3, 4, 5, 0, 0, 8, 9, 6, 7, 12, 13, 10, 11, 14};
+//        int[] startState={1, 0, 2, 3, 5, 6, 7, 4, 9, 10, 11, 8, 0, 13, 14, 12};
+//        int[] startState={1, 2, 3, 0, 5, 6, 7, 4, 9, 10, 11, 8, 13, 14, 0, 12};
+//        int[] startState={0, 2, 3, 0, 1, 5, 10, 4, 9, 6, 8, 7, 13, 14, 11, 12};
+//        int[] startState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0, 0, 14};
         long startTime = new Date().getTime();
-        LinkedList<BehaviorNode> path = This.Play();
+        LinkedList<BehaviorNode> path = This.Play(startState, goalState);
         System.out.println((new Date().getTime() - startTime) + "ms");
         if (path == null) {
             System.out.println("No Answer!");
@@ -37,24 +33,16 @@ class The_14_Puzzle {
     }
 
     /**
-     * initial the game.
-     *
-     * @param startState start state of the game.
-     */
-    public void StartGame(int[] startState) {
-        behaviorTreeForBFSAlgorithm = new BehaviorTreeForBFSAlgorithm(startState.clone());
-        goal = new BehaviorNode(null, goalState.clone());
-        rowLength = (int) Math.sqrt(startState.length);
-    }
-
-    /**
      * start from startState, then for each currentState find all possible moves, then change currentState to nextState.
      * if goal showed up find path to goal.
      *
      * @return path to goal.
      */
-    public LinkedList<BehaviorNode> Play() throws Throwable {
-        return Algorithm2();
+    public LinkedList<BehaviorNode> Play(int[] startState, int[] goalState) throws Throwable {
+        rowLength = (int) Math.sqrt(startState.length);
+//        return Algorithm1(startState.clone(), goalState.clone());
+        return Algorithm2(startState.clone(), goalState.clone());
+
     }
 
     /**
@@ -62,27 +50,22 @@ class The_14_Puzzle {
      *
      * @return path from start to goal.
      */
-    private LinkedList<BehaviorNode> Algorithm1() throws Throwable {
-        BehaviorNode currentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
-        int firstBlank, secondBlank;
+    public LinkedList<BehaviorNode> Algorithm1(int[] startState, int[] goalState) throws Throwable {
+        BehaviorNode goal = new BehaviorNode(null, goalState.clone());
+        BehaviorTreeForBFSAlgorithm tree = new BehaviorTreeForBFSAlgorithm(startState);
+        BehaviorNode currentNode = tree.GetHeadOfFrontier();
         LinkedList<int[]> possibleMoves;
-        BehaviorNode newNode;
         while (true) {
-            firstBlank = currentNode.FindFirstBlank();
-            secondBlank = currentNode.FindSecondBlank();
-            possibleMoves = FindAllPossibleMoves(currentNode.state.clone(), firstBlank);
-            int possibleMovesLength = possibleMoves.size();
-            possibleMoves.addAll(FindAllPossibleMoves(currentNode.state.clone(), secondBlank));
-            for (int i = 0; i < possibleMovesLength; i++) {
-                possibleMoves.addAll(FindAllPossibleMoves(possibleMoves.get(i).clone(), secondBlank));
-            }
+            int firstBlank = currentNode.FindFirstBlank();
+            int secondBlank = currentNode.FindSecondBlank();
+            possibleMoves = FindAllPossibleMoves(currentNode.state.clone(), firstBlank, secondBlank);
             for (int[] move : possibleMoves) {
-                newNode = behaviorTreeForBFSAlgorithm.NewNode(currentNode, move.clone());
+                BehaviorNode newNode = tree.NewNode(currentNode, move.clone());
                 if (newNode != null && BehaviorNode.Compare(newNode, goal))
                     return newNode.PathToNode();
             }
-            behaviorTreeForBFSAlgorithm.AddNodeToExplored(currentNode);
-            currentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
+            tree.AddNodeToExplored(currentNode);
+            currentNode = tree.GetHeadOfFrontier();
             possibleMoves.clear();
             if (currentNode == null)
                 return null;
@@ -95,15 +78,17 @@ class The_14_Puzzle {
      *
      * @return path from start to goal.
      */
-    public LinkedList<BehaviorNode> Algorithm2() throws Throwable {
+    public LinkedList<BehaviorNode> Algorithm2(int[] startState, int[] goalState) throws Throwable {
+        BehaviorNode goal = new BehaviorNode(null, goalState.clone());
         /* head variables */
-        BehaviorNode headCurrentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
+        BehaviorTreeForBFSAlgorithm headTree = new BehaviorTreeForBFSAlgorithm(startState);
+        BehaviorNode headCurrentNode = headTree.GetHeadOfFrontier();
         int headFirstBlank, headSecondBlank;
         LinkedList<int[]> headPossibleMoves;
         boolean headNotEnded = true;
         /* tail variables */
-        BehaviorTreeForBFSAlgorithm tailBehaviorTreeForBFSAlgorithm = new BehaviorTreeForBFSAlgorithm(goal.state.clone());
-        BehaviorNode tailCurrentNode = tailBehaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
+        BehaviorTreeForBFSAlgorithm tailTree = new BehaviorTreeForBFSAlgorithm(goal.state.clone());
+        BehaviorNode tailCurrentNode = tailTree.GetHeadOfFrontier();
         int tailFirstBlank, tailSecondBlank;
         LinkedList<int[]> tailPossibleMoves;
         boolean tailNotEnded = true;
@@ -112,54 +97,44 @@ class The_14_Puzzle {
             if (headNotEnded) {
                 headFirstBlank = headCurrentNode.FindFirstBlank();
                 headSecondBlank = headCurrentNode.FindSecondBlank();
-                headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank);
-                int headPossibleMovesLength = headPossibleMoves.size();
-                headPossibleMoves.addAll(FindAllPossibleMoves(headCurrentNode.state.clone(), headSecondBlank));
-                for (int i = 0; i < headPossibleMovesLength; i++) {
-                    headPossibleMoves.addAll(FindAllPossibleMoves(headPossibleMoves.get(i).clone(), headSecondBlank));
-                }
+                headPossibleMoves = FindAllPossibleMoves(headCurrentNode.state.clone(), headFirstBlank, headSecondBlank);
                 for (int i = 0; i < headPossibleMoves.size(); i++) {
-                    BehaviorNode newNode = behaviorTreeForBFSAlgorithm.NewNode(headCurrentNode, headPossibleMoves.get(i).clone());
+                    BehaviorNode newNode = headTree.NewNode(headCurrentNode, headPossibleMoves.get(i).clone());
                     if (newNode != null) {
-                        BehaviorNode searchResult = tailBehaviorTreeForBFSAlgorithm.SearchExplored(newNode);
+                        BehaviorNode searchResult = tailTree.SearchExplored(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(newNode, searchResult);
                         }
-                        searchResult = tailBehaviorTreeForBFSAlgorithm.SearchFrontier(newNode);
+                        searchResult = tailTree.SearchFrontier(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(newNode, searchResult);
                         }
                     }
                 }
-                behaviorTreeForBFSAlgorithm.AddNodeToExplored(headCurrentNode);
-                headCurrentNode = behaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
+                headTree.AddNodeToExplored(headCurrentNode);
+                headCurrentNode = headTree.GetHeadOfFrontier();
                 headPossibleMoves.clear();
             }
             /* tail process */
             if (tailNotEnded) {
                 tailFirstBlank = tailCurrentNode.FindFirstBlank();
                 tailSecondBlank = tailCurrentNode.FindSecondBlank();
-                tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank);
-                int tailPossibleMovesLength = tailPossibleMoves.size();
-                tailPossibleMoves.addAll(FindAllPossibleMoves(tailCurrentNode.state.clone(), tailSecondBlank));
-                for (int i = 0; i < tailPossibleMovesLength; i++) {
-                    tailPossibleMoves.addAll(FindAllPossibleMoves(tailPossibleMoves.get(i).clone(), tailSecondBlank));
-                }
+                tailPossibleMoves = FindAllPossibleMoves(tailCurrentNode.state.clone(), tailFirstBlank, tailSecondBlank);
                 for (int i = 0; i < tailPossibleMoves.size(); i++) {
-                    BehaviorNode newNode = tailBehaviorTreeForBFSAlgorithm.NewNode(tailCurrentNode, tailPossibleMoves.get(i).clone());
+                    BehaviorNode newNode = tailTree.NewNode(tailCurrentNode, tailPossibleMoves.get(i).clone());
                     if (newNode != null) {
-                        BehaviorNode searchResult = behaviorTreeForBFSAlgorithm.SearchExplored(newNode);
+                        BehaviorNode searchResult = headTree.SearchExplored(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(searchResult, newNode);
                         }
-                        searchResult = behaviorTreeForBFSAlgorithm.SearchFrontier(newNode);
+                        searchResult = headTree.SearchFrontier(newNode);
                         if (searchResult != null) {
                             return ConcatenatePaths(searchResult, newNode);
                         }
                     }
                 }
-                tailBehaviorTreeForBFSAlgorithm.AddNodeToExplored(tailCurrentNode);
-                tailCurrentNode = tailBehaviorTreeForBFSAlgorithm.GetHeadOfFrontier();
+                tailTree.AddNodeToExplored(tailCurrentNode);
+                tailCurrentNode = tailTree.GetHeadOfFrontier();
                 tailPossibleMoves.clear();
             }
             if (headCurrentNode == null)
@@ -194,7 +169,7 @@ class The_14_Puzzle {
      * @param blank place of the blank in game board.
      * @return all possible states after blank moved.
      */
-    private LinkedList<int[]> FindAllPossibleMoves(int[] state, int blank) {
+    private LinkedList<int[]> FindBlankPossibleMoves(int[] state, int blank) {
         LinkedList<int[]> movesList = new LinkedList<int[]>();
         /*
           down
@@ -225,6 +200,59 @@ class The_14_Puzzle {
             movesList.add(SwipBlank(state.clone(), blank, left));
         }
         return movesList;
+    }
+
+    /**
+     * find all possible different moves for two blanks in the state.
+     *
+     * @param state       current state.
+     * @param firstBlank  index of first blank.
+     * @param secondBlank index of second blank.
+     * @return list of states.
+     */
+    private LinkedList<int[]> FindAllPossibleMoves(int[] state, int firstBlank, int secondBlank) {
+        /** first blank moves first. */
+        LinkedList<int[]> firstListOfPossibleMoves = FindBlankPossibleMoves(state.clone(), firstBlank);
+        int firstBlankMovesLength = firstListOfPossibleMoves.size();
+        for (int i = 0; i < firstBlankMovesLength; i++) {
+            firstListOfPossibleMoves.addAll(FindBlankPossibleMoves(firstListOfPossibleMoves.get(i).clone(), secondBlank));
+        }
+        /** second blank moves first. */
+        LinkedList<int[]> secondListOfPossibleMoves = FindBlankPossibleMoves(state.clone(), secondBlank);
+        int secondBlankMovesLength = secondListOfPossibleMoves.size();
+        for (int i = 0; i < secondBlankMovesLength; i++) {
+            secondListOfPossibleMoves.addAll(FindBlankPossibleMoves(secondListOfPossibleMoves.get(i).clone(), firstBlank));
+        }
+        /** add moves( moves that don't exist in first list ) from second list to first list. */
+        for (int[] move1 : secondListOfPossibleMoves) {
+            boolean doNotExistsInFirstList = true;
+            for (int[] move2 : firstListOfPossibleMoves) {
+                /** move1 == move2 */
+                if (CompareStates(move1, move2)) {
+                    doNotExistsInFirstList = false;
+                    break;
+                }
+            }
+            /** move1 doesn't exists in first list */
+            if (doNotExistsInFirstList)
+                firstListOfPossibleMoves.add(move1);
+        }
+        return firstListOfPossibleMoves;
+    }
+
+    /**
+     * compare two states.
+     *
+     * @return "true" if they are equal "false" if they are not equal.
+     */
+    private boolean CompareStates(int[] firstState, int[] secondState) {
+        for (int i = 0; i < firstState.length; i++) {
+            /** move1 != move2 */
+            if (firstState[i] != secondState[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
